@@ -16,10 +16,6 @@
 #![cfg_attr(feature = "nightly", feature(test))]
 #![cfg_attr(feature = "swap", feature(allocator_api))]
 #![cfg_attr(feature = "swap", feature(slice_ptr_get))]
-// Though the new nightly rust stablized this feature, keep it anyway
-// because some other project (like TiKV) is still using the old.
-#![cfg_attr(feature = "swap", feature(nonnull_slice_from_raw_parts))]
-#![cfg_attr(feature = "swap", feature(slice_ptr_len))]
 #![cfg_attr(feature = "swap", feature(alloc_layout_extra))]
 #![cfg_attr(all(test, feature = "swap"), feature(alloc_error_hook))]
 #![cfg_attr(all(test, feature = "swap"), feature(cfg_sanitize))]
@@ -69,7 +65,7 @@ pub use config::{Config, RecoveryMode};
 pub use engine::Engine;
 pub use errors::{Error, Result};
 pub use log_batch::{Command, LogBatch, MessageExt};
-pub use metrics::{get_perf_context, set_perf_context, take_perf_context, PerfContext};
+pub use metrics::{PerfContext, get_perf_context, set_perf_context, take_perf_context};
 pub use pipe_log::Version;
 pub use util::ReadableSize;
 

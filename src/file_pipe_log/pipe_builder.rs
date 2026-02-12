@@ -17,17 +17,17 @@ use crate::config::{Config, RecoveryMode};
 use crate::env::{FileSystem, Handle, Permission};
 use crate::errors::is_no_space_err;
 use crate::event_listener::EventListener;
-use crate::log_batch::{LogItemBatch, LOG_BATCH_HEADER_LEN};
+use crate::log_batch::{LOG_BATCH_HEADER_LEN, LogItemBatch};
 use crate::pipe_log::{FileId, FileSeq, LogQueue};
 use crate::util::{Factory, ReadableSize};
 use crate::{Error, Result};
 
 use super::format::{
-    build_reserved_file_name, lock_file_path, parse_reserved_file_name, FileNameExt, LogFileFormat,
+    FileNameExt, LogFileFormat, build_reserved_file_name, lock_file_path, parse_reserved_file_name,
 };
 use super::log_file::build_file_reader;
 use super::pipe::{
-    find_available_dir, DualPipes, File, PathId, Paths, SinglePipe, DEFAULT_FIRST_FILE_SEQ,
+    DEFAULT_FIRST_FILE_SEQ, DualPipes, File, PathId, Paths, SinglePipe, find_available_dir,
 };
 use super::reader::LogItemBatchFileReader;
 
@@ -240,9 +240,9 @@ impl<F: FileSystem> DualPipesBuilder<F> {
             self.scan_dir(&dir, lock)?;
         }
 
-        self.append_file_names.sort_by(|a, b| a.seq.cmp(&b.seq));
-        self.rewrite_file_names.sort_by(|a, b| a.seq.cmp(&b.seq));
-        self.recycled_file_names.sort_by(|a, b| a.seq.cmp(&b.seq));
+        self.append_file_names.sort_by_key(|a| a.seq);
+        self.rewrite_file_names.sort_by_key(|a| a.seq);
+        self.recycled_file_names.sort_by_key(|a| a.seq);
         Ok(())
     }
 
